@@ -3,7 +3,7 @@ import { useState, type ReactNode } from "react";
 
 const nav = [
   ["/", "Home"], ["/registration", "Registration"], ["/payment", "Payment"], ["/journal", "Journal"],
-  ["/events", "Events"], ["/ngo", "NGO"], ["/team", "Team"], ["/dashboard", "Dashboard"],
+  ["/events", "Events"], ["/ngo", "NGO"], ["/members", "Members"], ["/team", "Team"], ["/dashboard", "Dashboard"],
 ] as const;
 
 function Brand() {

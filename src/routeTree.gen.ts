@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as JournalRouteImport } from './routes/journal'
+import { Route as MembersRouteImport } from './routes/members'
 import { Route as NgoRouteImport } from './routes/ngo'
 import { Route as PaymentRouteImport } from './routes/payment'
 import { Route as RegistrationRouteImport } from './routes/registration'
@@ -36,6 +37,11 @@ const EventsRoute = EventsRouteImport.update({
 const JournalRoute = JournalRouteImport.update({
   id: '/journal',
   path: '/journal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MembersRoute = MembersRouteImport.update({
+  id: '/members',
+  path: '/members',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NgoRoute = NgoRouteImport.update({
@@ -64,6 +70,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/events': typeof EventsRoute
   '/journal': typeof JournalRoute
+  '/members': typeof MembersRoute
   '/ngo': typeof NgoRoute
   '/payment': typeof PaymentRoute
   '/registration': typeof RegistrationRoute
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/events': typeof EventsRoute
   '/journal': typeof JournalRoute
+  '/members': typeof MembersRoute
   '/ngo': typeof NgoRoute
   '/payment': typeof PaymentRoute
   '/registration': typeof RegistrationRoute
@@ -85,6 +93,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/events': typeof EventsRoute
   '/journal': typeof JournalRoute
+  '/members': typeof MembersRoute
   '/ngo': typeof NgoRoute
   '/payment': typeof PaymentRoute
   '/registration': typeof RegistrationRoute
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/events'
     | '/journal'
+    | '/members'
     | '/ngo'
     | '/payment'
     | '/registration'
@@ -107,6 +117,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/events'
     | '/journal'
+    | '/members'
     | '/ngo'
     | '/payment'
     | '/registration'
@@ -117,6 +128,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/events'
     | '/journal'
+    | '/members'
     | '/ngo'
     | '/payment'
     | '/registration'
@@ -128,6 +140,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   EventsRoute: typeof EventsRoute
   JournalRoute: typeof JournalRoute
+  MembersRoute: typeof MembersRoute
   NgoRoute: typeof NgoRoute
   PaymentRoute: typeof PaymentRoute
   RegistrationRoute: typeof RegistrationRoute
@@ -162,6 +175,13 @@ declare module '@tanstack/react-router' {
       path: '/journal'
       fullPath: '/journal'
       preLoaderRoute: typeof JournalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/members': {
+      id: '/members'
+      path: '/members'
+      fullPath: '/members'
+      preLoaderRoute: typeof MembersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ngo': {
@@ -200,6 +220,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   EventsRoute: EventsRoute,
   JournalRoute: JournalRoute,
+  MembersRoute: MembersRoute,
   NgoRoute: NgoRoute,
   PaymentRoute: PaymentRoute,
   RegistrationRoute: RegistrationRoute,

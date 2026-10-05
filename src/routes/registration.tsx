@@ -3,6 +3,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Page, Field, inputCls, btnCls, cardCls, meta } from "@/components/Shell";
 import { useStore, type Role } from "@/lib/store";
+import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/registration")({
   head: () => meta("Registration", "Register as a researcher, student, admin or NGO partner on ALABATT-HUB."),
@@ -12,9 +13,14 @@ export const Route = createFileRoute("/registration")({
 function Reg() {
   const { users, setUsers } = useStore();
   const [f, setF] = useState({ name: "", email: "", matric: "", role: "Student" as Role });
-  const submit = (e: React.FormEvent) => {
+  const [busy, setBusy] = useState(false);
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!f.name || !f.email || !f.matric) { toast.error("Please fill all fields"); return; }
+    setBusy(true);
+    const { error } = await supabase.from("users").insert({ full_name: f.name, email: f.email, matric_number: f.matric, role: f.role });
+    setBusy(false);
+    if (error) { toast.error(`Registration failed: ${error.message}`); return; }
     setUsers([...users, { id: Date.now(), ...f }]);
     setF({ name: "", email: "", matric: "", role: "Student" });
     toast.success("Registered successfully");
@@ -31,7 +37,7 @@ function Reg() {
               {["Researcher", "Student", "Admin", "NGO Partner"].map((r) => <option key={r}>{r}</option>)}
             </select>
           </Field>
-          <button className={btnCls}>Register</button>
+          <button className={btnCls} disabled={busy}>{busy ? "Registering…" : "Register"}</button>
         </form>
         <div className={cardCls}>
           <h2 className="font-bold text-primary">Registered Users ({users.length})</h2>
