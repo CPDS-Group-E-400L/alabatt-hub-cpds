@@ -12,7 +12,7 @@ function Members() {
   const [rows, setRows] = useState<{ full_name: string; role: string }[]>([]);
   const [state, setState] = useState<"loading" | "ok" | "error">("loading");
   useEffect(() => {
-    supabase.from("users").select("full_name, role").order("full_name").then(({ data, error }) => {
+    supabase.from("public_members").select("full_name, role").order("full_name").then(({ data, error }) => {
       if (error) { setState("error"); return; }
       setRows(data ?? []); setState("ok");
     });
