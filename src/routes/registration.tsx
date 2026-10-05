@@ -37,7 +37,7 @@ function Reg() {
               {["Researcher", "Student", "Admin", "NGO Partner"].map((r) => <option key={r}>{r}</option>)}
             </select>
           </Field>
-          <button className={btnCls}>Register</button>
+          <button className={btnCls} disabled={busy}>{busy ? "Registering…" : "Register"}</button>
         </form>
         <div className={cardCls}>
           <h2 className="font-bold text-primary">Registered Users ({users.length})</h2>
