@@ -20,8 +20,8 @@ function Home() {
   return (
     <>
       <section className="relative isolate overflow-hidden">
-        <img src={hero} alt="University campus at sunset" width={1600} height={800} className="absolute inset-0 -z-10 h-full w-full object-cover" />
-        <div className="absolute inset-0 -z-10 bg-primary/80" />
+        <img src={hero} alt="Eight university students discussing in a circle on the campus lawn" width={1920} height={1088} className="absolute inset-0 -z-10 h-full w-full object-cover" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-primary/92 via-primary/70 to-primary/30" />
         <div className="mx-auto max-w-7xl px-4 py-24 sm:py-32 text-primary-foreground">
           <h1 className="text-4xl sm:text-6xl font-extrabold max-w-3xl">ALABATT-HUB <span className="text-gold">—</span> Unifying CPDS Operations</h1>
           <p className="mt-6 max-w-2xl text-lg">Transforming the Centre for Peace and Development Studies from scattered paperwork into one digital hub for people, payments, research, events and partnerships.</p>
