@@ -18,7 +18,7 @@ function Reg() {
     e.preventDefault();
     if (!f.name || !f.email || !f.matric) { toast.error("Please fill all fields"); return; }
     setBusy(true);
-    const { error } = await supabase.from("users").insert({ name: f.name, email: f.email, matric: f.matric, role: f.role });
+    const { error } = await supabase.from("users").insert({ full_name: f.name, email: f.email, matric_number: f.matric, role: f.role });
     setBusy(false);
     if (error) { toast.error(`Registration failed: ${error.message}`); return; }
     setUsers([...users, { id: Date.now(), ...f }]);

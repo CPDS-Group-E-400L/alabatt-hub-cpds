@@ -9,10 +9,10 @@ export const Route = createFileRoute("/members")({
 });
 
 function Members() {
-  const [rows, setRows] = useState<{ name: string; role: string }[]>([]);
+  const [rows, setRows] = useState<{ full_name: string; role: string }[]>([]);
   const [state, setState] = useState<"loading" | "ok" | "error">("loading");
   useEffect(() => {
-    supabase.from("users").select("name, role").order("name").then(({ data, error }) => {
+    supabase.from("users").select("full_name, role").order("full_name").then(({ data, error }) => {
       if (error) { setState("error"); return; }
       setRows(data ?? []); setState("ok");
     });
@@ -27,7 +27,7 @@ function Members() {
             <thead><tr className="border-b border-border text-left text-primary"><th className="py-2">S/N</th><th>Name</th><th>Role</th></tr></thead>
             <tbody>
               {rows.map((r, i) => (
-                <tr key={i} className="border-b border-border"><td className="py-2">{i + 1}</td><td className="font-semibold">{r.name}</td><td>{r.role}</td></tr>
+                <tr key={i} className="border-b border-border"><td className="py-2">{i + 1}</td><td className="font-semibold">{r.full_name}</td><td>{r.role}</td></tr>
               ))}
               {rows.length === 0 && <tr><td colSpan={3} className="py-4 text-muted-foreground">No members yet.</td></tr>}
             </tbody>
