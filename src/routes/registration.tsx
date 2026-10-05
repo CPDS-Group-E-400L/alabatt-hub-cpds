@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Page, Field, inputCls, btnCls, cardCls, meta } from "@/components/Shell";
-import { useStore, type Role } from "@/lib/store";
 import { supabase } from "@/lib/supabase";
+import type { Role } from "@/lib/store";
 
 export const Route = createFileRoute("/registration")({
   head: () => meta("Registration", "Register as a researcher, student, admin or NGO partner on ALABATT-HUB."),
@@ -11,9 +11,18 @@ export const Route = createFileRoute("/registration")({
 });
 
 function Reg() {
-  const { users, setUsers } = useStore();
   const [f, setF] = useState({ name: "", email: "", matric: "", role: "Student" as Role });
   const [busy, setBusy] = useState(false);
+  // Public list: only name + role, read from the safe public_members view.
+  const [members, setMembers] = useState<{ full_name: string; role: string }[]>([]);
+
+  const loadMembers = () => {
+    supabase.from("public_members").select("full_name, role").order("full_name").then(({ data }) => {
+      setMembers(data ?? []);
+    });
+  };
+  useEffect(loadMembers, []);
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!f.name || !f.email || !f.matric) { toast.error("Please fill all fields"); return; }
@@ -21,7 +30,7 @@ function Reg() {
     const { error } = await supabase.from("users").insert({ full_name: f.name, email: f.email, matric_number: f.matric, role: f.role });
     setBusy(false);
     if (error) { toast.error(`Registration failed: ${error.message}`); return; }
-    setUsers([...users, { id: Date.now(), ...f }]);
+    setMembers((m) => [...m, { full_name: f.name, role: f.role }]);
     setF({ name: "", email: "", matric: "", role: "Student" });
     toast.success("Registered successfully");
   };
@@ -40,11 +49,13 @@ function Reg() {
           <button className={btnCls} disabled={busy}>{busy ? "Registering…" : "Register"}</button>
         </form>
         <div className={cardCls}>
-          <h2 className="font-bold text-primary">Registered Users ({users.length})</h2>
+          <h2 className="font-bold text-primary">Registered Users ({members.length})</h2>
+          <p className="mt-1 text-xs text-muted-foreground">Only names and roles are shown. Emails and matric numbers stay private.</p>
           <ul className="mt-4 divide-y divide-border">
-            {users.map((u) => (
-              <li key={u.id} className="py-2 text-sm"><span className="font-semibold">{u.name}</span> · {u.matric}<br /><span className="text-muted-foreground">{u.email} — {u.role}</span></li>
+            {members.map((u, i) => (
+              <li key={i} className="py-2 text-sm"><span className="font-semibold">{u.full_name}</span> — {u.role}</li>
             ))}
+            {members.length === 0 && <li className="py-2 text-sm text-muted-foreground">No members yet.</li>}
           </ul>
         </div>
       </div>
