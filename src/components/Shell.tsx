@@ -80,9 +80,10 @@ export function Status({ s }: { s: string }) {
 }
 
 export function meta(title: string, description: string) {
+  const siteTitle = "ALABATT-HUB | CPDS - Rev. Fr. Moses Orshio Adasu University";
   return {
     meta: [
-      { title: `${title} — ALABATT-HUB` },
+      { title: siteTitle },
       { name: "description", content: description },
       { property: "og:title", content: `${title} — ALABATT-HUB` },
       { property: "og:description", content: description },
