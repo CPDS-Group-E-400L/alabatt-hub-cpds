@@ -14,7 +14,7 @@ function Reg() {
   const [f, setF] = useState({ name: "", email: "", matric: "", role: "Student" as Role });
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!f.name || !f.email || !f.matric) return toast.error("Please fill all fields");
+    if (!f.name || !f.email || !f.matric) { toast.error("Please fill all fields"); return; }
     setUsers([...users, { id: Date.now(), ...f }]);
     setF({ name: "", email: "", matric: "", role: "Student" });
     toast.success("Registered successfully");

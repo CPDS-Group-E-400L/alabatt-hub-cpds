@@ -23,7 +23,7 @@ function N() {
       <div className="mt-10 grid gap-8 lg:grid-cols-2">
         <form className={`${cardCls} space-y-4`} onSubmit={(e) => {
           e.preventDefault();
-          if (!f.name || !f.focus || !f.contact) return toast.error("Fill all fields");
+          if (!f.name || !f.focus || !f.contact) { toast.error("Fill all fields"); return; }
           setNgos([...ngos, { id: Date.now(), ...f }]); setF({ name: "", focus: "", contact: "" }); toast.success("Partnership request added");
         }}>
           <h2 className="font-bold text-primary">Partnership Form</h2>
@@ -36,7 +36,7 @@ function N() {
           <h2 className="font-bold text-primary">Resource Board</h2>
           <ul className="divide-y divide-border text-sm">{resources.map((x) => <li key={x.id} className="py-2"><span className="font-semibold">{x.title}</span> — {x.by}</li>)}</ul>
           <form className="flex flex-col sm:flex-row gap-2" onSubmit={(e) => {
-            e.preventDefault(); if (!r.title) return toast.error("Enter a title");
+            e.preventDefault(); if (!r.title) { toast.error("Enter a title"); return; }
             setResources([...resources, { id: Date.now(), title: r.title, by: r.by || "Anonymous" }]); setR({ title: "", by: "" }); toast.success("Resource posted");
           }}>
             <input aria-label="Resource title" placeholder="Resource title" className={inputCls} value={r.title} onChange={(e) => setR({ ...r, title: e.target.value })} />

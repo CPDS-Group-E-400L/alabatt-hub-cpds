@@ -17,12 +17,12 @@ function J() {
   const [key, setKey] = useState(0);
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!f.title || !f.abstract || !f.file) return toast.error("Title, abstract and PDF are required");
+    if (!f.title || !f.abstract || !f.file) { toast.error("Title, abstract and PDF are required"); return; }
     setJournals([{ id: Date.now(), ...f, status: "Submitted" }, ...journals]);
     setF({ title: "", abstract: "", keywords: "", file: "" }); setKey(key + 1);
     toast.success("Manuscript submitted");
   };
-  const advance = (id: number) => setJournals(journals.map((j) => j.id === id ? { ...j, status: steps[Math.min(steps.indexOf(j.status) + 1, 2)] } : j));
+  const advance = (id: number) => setJournals(journals.map((j) => j.id === id ? { ...j, status: steps[Math.min(steps.indexOf(j.status) + 1, 2)]! } : j));
   return (
     <Page title="Journal Submission" intro="Submit a manuscript and follow its progress.">
       <div className="grid gap-8 lg:grid-cols-2">

@@ -20,7 +20,7 @@ function Pay() {
   }, [pendingPayment]);
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!purpose || !amount) return toast.error("Enter purpose and amount");
+    if (!purpose || !amount) { toast.error("Enter purpose and amount"); return; }
     setPayments([{ txId, purpose, amount: Number(amount), status: "Pending" }, ...payments]);
     if (pendingPayment?.eventId) setEvents((ev) => ev.map((x) => x.id === pendingPayment.eventId ? { ...x, registered: x.registered + 1 } : x));
     setPendingPayment(null); setPurpose(""); setAmount(""); setTxId(genTx());
