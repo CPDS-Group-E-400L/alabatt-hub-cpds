@@ -14,10 +14,10 @@ function Reg() {
   const [f, setF] = useState({ name: "", email: "", matric: "", role: "Student" as Role });
   const [busy, setBusy] = useState(false);
   // Public list: only name + role, read from the safe public_members view.
-  const [members, setMembers] = useState<{ id: string | number; full_name: string }[]>([]);
+  const [members, setMembers] = useState<{ id: string | number; full_name: string; role: string }[]>([]);
 
   const loadMembers = () => {
-    supabase.from("public_members").select("id, full_name").order("full_name").then(({ data }) => {
+    supabase.from("public_members").select("id, full_name, role").order("full_name").then(({ data }) => {
       setMembers(data ?? []);
     });
   };
