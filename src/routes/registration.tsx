@@ -14,10 +14,10 @@ function Reg() {
   const [f, setF] = useState({ name: "", email: "", matric: "", role: "Student" as Role });
   const [busy, setBusy] = useState(false);
   // Public list: only name + role, read from the safe public_members view.
-  const [members, setMembers] = useState<{ id: string | number; full_name: string }[]>([]);
+  const [members, setMembers] = useState<{ id: string | number; full_name: string; role: string }[]>([]);
 
   const loadMembers = () => {
-    supabase.from("public_members").select("id, full_name").order("full_name").then(({ data }) => {
+    supabase.from("public_members").select("id, full_name, role").order("full_name").then(({ data }) => {
       setMembers(data ?? []);
     });
   };
@@ -69,10 +69,13 @@ function Reg() {
         </form>
         <div className={cardCls}>
           <h2 className="font-bold text-primary">Registered Users ({members.length})</h2>
-          <p className="mt-1 text-xs text-muted-foreground">Only names are shown. Emails and matric numbers stay private.</p>
+          <p className="mt-1 text-xs text-muted-foreground">Only names and roles are shown. Emails and matric numbers stay private.</p>
           <ul className="mt-4 divide-y divide-border">
             {members.map((u) => (
-              <li key={u.id} className="py-2 text-sm"><span className="font-semibold">{u.full_name}</span></li>
+              <li key={u.id} className="py-2">
+                <span className="block text-sm font-bold text-foreground">{u.full_name}</span>
+                <span className="block text-xs text-muted-foreground">{u.role}</span>
+              </li>
             ))}
             {members.length === 0 && <li className="py-2 text-sm text-muted-foreground">No members yet.</li>}
           </ul>
