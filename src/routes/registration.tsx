@@ -14,10 +14,10 @@ function Reg() {
   const [f, setF] = useState({ name: "", email: "", matric: "", role: "Student" as Role });
   const [busy, setBusy] = useState(false);
   // Public list: only name + role, read from the safe public_members view.
-  const [members, setMembers] = useState<{ full_name: string; role: string }[]>([]);
+  const [members, setMembers] = useState<{ id: string | number; full_name: string }[]>([]);
 
   const loadMembers = () => {
-    supabase.from("public_members").select("full_name, role").order("full_name").then(({ data }) => {
+    supabase.from("public_members").select("id, full_name").order("full_name").then(({ data }) => {
       setMembers(data ?? []);
     });
   };
@@ -27,10 +27,29 @@ function Reg() {
     e.preventDefault();
     if (!f.name || !f.email || !f.matric) { toast.error("Please fill all fields"); return; }
     setBusy(true);
-    const { error } = await supabase.from("users").insert({ full_name: f.name, email: f.email, matric_number: f.matric, role: f.role });
+    const normalizedEmail = f.email.trim().toLowerCase();
+    const normalizedMatric = f.matric.trim().toUpperCase();
+    const { error } = await supabase.from("users").insert({
+      full_name: f.name.trim(),
+      email: normalizedEmail,
+      matric_number: normalizedMatric,
+      role: f.role,
+    });
     setBusy(false);
-    if (error) { toast.error(`Registration failed: ${error.message}`); return; }
-    setMembers((m) => [...m, { full_name: f.name, role: f.role }]);
+    if (error) {
+      const duplicateDetail = `${error.message} ${error.details ?? ""}`.toLowerCase();
+      if (error.code === "23505" && duplicateDetail.includes("matric")) {
+        toast.error("Matric number already registered");
+        return;
+      }
+      if (error.code === "23505" && duplicateDetail.includes("email")) {
+        toast.error("Email already registered");
+        return;
+      }
+      toast.error(`Registration failed: ${error.message}`);
+      return;
+    }
+    loadMembers();
     setF({ name: "", email: "", matric: "", role: "Student" });
     toast.success("Registered successfully");
   };
@@ -50,10 +69,10 @@ function Reg() {
         </form>
         <div className={cardCls}>
           <h2 className="font-bold text-primary">Registered Users ({members.length})</h2>
-          <p className="mt-1 text-xs text-muted-foreground">Only names and roles are shown. Emails and matric numbers stay private.</p>
+          <p className="mt-1 text-xs text-muted-foreground">Only names are shown. Emails and matric numbers stay private.</p>
           <ul className="mt-4 divide-y divide-border">
-            {members.map((u, i) => (
-              <li key={i} className="py-2 text-sm"><span className="font-semibold">{u.full_name}</span> — {u.role}</li>
+            {members.map((u) => (
+              <li key={u.id} className="py-2 text-sm"><span className="font-semibold">{u.full_name}</span></li>
             ))}
             {members.length === 0 && <li className="py-2 text-sm text-muted-foreground">No members yet.</li>}
           </ul>

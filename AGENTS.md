@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Public member directories must query `public_members` with an explicit safe-column projection; the private `users` table is write-only from public registration UI because RLS blocks anonymous reads.
